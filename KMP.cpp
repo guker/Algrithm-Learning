@@ -1,6 +1,35 @@
 #include <string>
 #include <vector>
 
+///朴素匹配
+int index(const std::string &S, const std::string &T,  int pos  = 0)
+{
+    int i = pos, j = 0;
+    int slen = S.length();
+    int tlen = T.length();
+
+    if (slen < 1 || tlen < 1 || pos < 0)
+    {
+        return -1;
+    }
+
+    while (i != slen && j != tlen)
+    {
+        if (S[i] == T[j])
+        {
+            ++i;
+            ++j;
+        }
+        else
+        {
+            i = i - j + 1;
+            j = 0;
+        }
+    }
+    return j == tlen? i - j: -1;
+}
+
+/// KMP
 void get_next(const std::string& T, std::vector<int>& next)
 {
 	next.resize(T.size());
