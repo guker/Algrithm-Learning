@@ -1,2 +1,2 @@
-# data-struct
-data-struct-learning
+# 算法学习
+一些常用的数据结构以及算法学习
