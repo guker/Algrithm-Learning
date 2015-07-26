@@ -8,7 +8,7 @@ struct ListNode
 	ListNode(int x):val(x),next(NULL){}
 };
 
-
+/// 求单链表中结点的个数
 unsigned int GetListLength(ListNode* phead)
 {
 	if(phead)
@@ -24,7 +24,8 @@ unsigned int GetListLength(ListNode* phead)
 	return nLength;
 }
 
-
+/// 单链表反转
+/// 从头到尾遍历原链表，每遍历一个结点，将其摘下放在新链表的最前端
 ListNode* ReverseList(ListNode* phead)
 {
 	if(phead == NULL || phead->next == NULL)
@@ -43,7 +44,9 @@ ListNode* ReverseList(ListNode* phead)
 	return pReversedhead;
 }
 
-
+///  查找单链表中的倒数第K个结点
+/// 思路：使用两个指针，先让前面的指针走到正向第K个结点，这样前后两个指针的距离差是k-1，之后前后两个指针一起向前走，前面的
+/// 前面的指针走到最后一个结点的时候，后面的指针所指的结点就是倒数第k个结点
 ListNode* RGetKthNode(ListNode* phead, unsigned int k)
 {
 	if(k == 0 || phead == NULL)
@@ -68,7 +71,8 @@ ListNode* RGetKthNode(ListNode* phead, unsigned int k)
 	return pBehind;
 }
 
-
+/// 查找单链表的中间结点
+/// 思路：设置两个指针，同时向前走，慢指针每次走一步，快指针每次走两步，快指针走到最后一个结点时，慢指针所指的结点就是中间结点
 ListNode* GetMiddleNode(ListNode* phead)
 {
 	if(phead == NULL || phead->next == NULL)
@@ -88,7 +92,8 @@ ListNode* GetMiddleNode(ListNode* phead)
 	return pBehind;
 }
 
-
+/// 逆序打印单链表
+/// 思路：颠倒顺序问题，一般使用栈实现,要么自己使用栈，要么让系统使用栈也就是递归
 void RPrintList(ListNode* phead)
 {
 	std::stack<ListNode*> s;
@@ -106,7 +111,8 @@ void RPrintList(ListNode* phead)
 		s.pop();
 	}
 }
-
+// 逆序打印单链表
+/// 思路：递归
 void RPrintList_1(ListNode* phead)
 {
 	if(phead == NULL)
@@ -118,6 +124,8 @@ void RPrintList_1(ListNode* phead)
 	}
 }
 
+/// 合并两个有序链表为有序链表
+/// 思路：注意链表为空的情况，与其中一个为空的情况
 ListNode* MergeSortedList(ListNode* phead1,ListNode* phead2)
 {
 	if(phead1 == NULL)
@@ -166,7 +174,9 @@ ListNode* MergeSortedList(ListNode* phead1,ListNode* phead2)
 	return pHeadMerged;
 }
 
-
+/// 判断一个单链表是否有环
+/// 设置两个指针，如果有环的话，用一个指针去遍历，是永远走不到头的，用两个指针遍历，一个指针一次走两步，一个指针一次走一步
+/// 如果有环的话，两个指针肯定会相遇。
 bool HasCircle(ListNode* phead)
 {
 	ListNode* pFast = phead;
@@ -183,8 +193,11 @@ bool HasCircle(ListNode* phead)
 	}
 	return false;
 
-}
 
+
+/// 判断两个单链表是否相交
+/// 思路：如果两个链表相交于某个结点，那么在这个相交结点之后的所有的结点都是两个链表共有的，也就是说，如果两个链表相交
+/// 
 bool IsIntersected(ListNode* phead1,ListNode* phead2)
 {
 	if(phead1 == NULL || phead2 == NULL)
