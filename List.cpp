@@ -198,7 +198,7 @@ bool HasCircle(ListNode* phead)
 /// 判断两个单链表是否相交
 /// 思路：如果两个链表相交于某个结点，那么在这个相交结点之后的所有的结点都是两个链表共有的，也就是说，如果两个链表相交
 /// 那么最后一个结点肯定是相同的，所以先遍历第一个链表，记住最后一个结点，然后遍历第二个结点，到最后一个结点时和第一个链表
-/// 的最后
+/// 的最后的一个结点作比较，如果相同则相交
 bool IsIntersected(ListNode* phead1,ListNode* phead2)
 {
 	if(phead1 == NULL || phead2 == NULL)
@@ -214,7 +214,10 @@ bool IsIntersected(ListNode* phead1,ListNode* phead2)
 	return pTail1 = pTail2;
 }
 
-
+/// 求两个单链表相交的第一个结点
+/// 思路：根据上题的方法先判断是否有交点，并分别计算每个链表的长度，len1，len2
+/// 两个链表均从头结点开始，假设len1大于len2，那么先将第一个结点链表先遍历len1-len2个结点，此时两个链表当前结点到第一个
+/// 结点的距离就相等，然后一起向后一起遍历，知道两两个的地址相同
 ListNode* GetFirstCommNode(ListNode* phead1,ListNode* phead2)
 {
 	if(phead1 == NULL || phead2 == NULL)
@@ -262,27 +265,35 @@ ListNode* GetFirstCommNode(ListNode* phead1,ListNode* phead2)
 
 }
 
-ListNode* GetfirstNodeInCircle(ListNode* phead)
+ListNode* detectCycle(ListNode* phead)
 {
-	if(phead == NULL || phead->next == NULL)
-		return NULL;
-
-	ListNode* pFast = phead;
-	ListNode* pSlow = phead;
-
-	while(pFast != NULL && pFast->next != NULL)
+	ListNode* slow = phead;
+	ListNode* fast = phead;
+	do
 	{
-		pSlow = pSlow->next;
-		pFast = pFast->next->next;
-		if(pSlow == pFast)
-			break;
+		if(!slow || !fast)
+			return NULL;
+		slow = slow->next;
+		fast = fast->next;
+		if(fast)
+			fast = fast->next;
+		else 
+			return NULL;
+	}while(slow != fast)
+	
+	slow = phead;
+	while(slow != fast)
+	{
+		slow = slow->next;
+		fast = fast->next;
 	}
-	if(pFast == NULL || pFast->next == NULL)
-		return NULL;
+	return slow;
 }
+	
 
 
-
+/// 给出一个单链表的头指针phead和一个结点指针pToBeDeleted，O(1)时间复杂度删除结点pToBeDeleted
+/// 思路： 我们可以把该节点的下一个结点的数据复制到该结点，然后删除下一个结点即可。
 void Delete(ListNode* phead,ListNode* pToBeDeleted)
 {
 	if(pToBeDeleted == NULL)
