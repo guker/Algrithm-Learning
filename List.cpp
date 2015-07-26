@@ -197,7 +197,8 @@ bool HasCircle(ListNode* phead)
 
 /// 判断两个单链表是否相交
 /// 思路：如果两个链表相交于某个结点，那么在这个相交结点之后的所有的结点都是两个链表共有的，也就是说，如果两个链表相交
-/// 
+/// 那么最后一个结点肯定是相同的，所以先遍历第一个链表，记住最后一个结点，然后遍历第二个结点，到最后一个结点时和第一个链表
+/// 的最后
 bool IsIntersected(ListNode* phead1,ListNode* phead2)
 {
 	if(phead1 == NULL || phead2 == NULL)
