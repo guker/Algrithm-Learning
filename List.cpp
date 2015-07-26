@@ -264,7 +264,9 @@ ListNode* GetFirstCommNode(ListNode* phead1,ListNode* phead2)
 	return pNode1;
 
 }
-
+/// 已知一个单链表中存在环，求进入环中的第一个结点
+/// 思路：设置两个指针，慢指针，快指针，慢指针每次走一步，快指针每次走两步，直到相遇
+/// 然后让慢指针从头遍历，再次相遇就是进入环的第一个结点
 ListNode* detectCycle(ListNode* phead)
 {
 	ListNode* slow = phead;
