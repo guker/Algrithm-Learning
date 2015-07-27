@@ -10,9 +10,9 @@ struct TreeNode
 	TreeNode(int x):val(x),left(NULL),right(NULL){}
 };
 
-/// ��������еĽ�����
-///˼·:  ���������Ϊ�գ�������Ϊ0
-///      �����������Ϊ�գ������������� = ������������ + ������������ + 1
+/// 求二叉树中的结点个数
+/// 思路:  如果二叉树为空，结点个数为0
+///        如果二叉树不为空，二叉树结点个数 = 左子树结点个数 + 右子树结点个数 + 1
 int GetNodeNum(TreeNode* root)
 {
 	if(root == NULL)
@@ -20,17 +20,21 @@ int GetNodeNum(TreeNode* root)
 	return GetNodeNum(root->left) + GetNodeNum(root->right) + 1;
 }
 
-
+/// 求二叉树的深度
+/// 递归解法：如果二叉树为空，二叉树的深度为0
+///           如果二叉树不空，二叉树的深度 = max(左子树深度，右子树深度)+1
 int GetDepth(TreeNode* root)
 {
-	if(root == NULL)
+	if(root == NULL) /// 递归出口
 		return 0;
 	int depthLeft = GetDepth(root->left);
 	int depthRight = GetDepth(root->right);
 	return (depthLeft > depthRight)?(depthLeft + 1):(depthRight + 1);
 }
 
-
+/// 前序遍历
+/// 递归：如果二叉树为空，空操作
+///       如果二叉树不为空，访问根结点，前序遍历左子树，前序遍历右子树
 void PreOrderTraverse(TreeNode* root)
 {
 	if(root == NULL)
@@ -40,7 +44,7 @@ void PreOrderTraverse(TreeNode* root)
 	PreOrderTraverse(root->right);
 }
 
-
+/// 中序遍历
 void InOrderTraverse(TreeNode* root)
 {
 	if(root == NULL)
@@ -50,7 +54,7 @@ void InOrderTraverse(TreeNode* root)
 	InOrderTraverse(root->right);
 }
 
-
+/// 后序遍历
 void PostOrderTraverse(TreeNode* root)
 {
 	if(root == NULL)
@@ -60,7 +64,9 @@ void PostOrderTraverse(TreeNode* root)
 	/// Visit(root);
 }
 
-
+/// 层序遍历
+/// 思路：相当于广度优先搜索，使用队列实现，队列初始化，将根结点压入队列，当队列不为空，进行如下操作：
+///       弹出一个结点，访问，若左子结点或右子结点不为空，将其压入队列
 void LevelTraverse(TreeNode* root)
 {
 	if(root == NULL)
@@ -80,7 +86,14 @@ void LevelTraverse(TreeNode* root)
 	return;
 }
 
-
+/// 将二叉树查找树变为有序的双向链表
+/// 要求不能创建新结点，只调整指针
+/// 递归：如果二叉查找树为空，不需要转换，对应双向链表的第一个结点为NULL，最后一个结点为NULL
+///       如果二叉查找树不为空
+///       如果左子树为空，对应双向有序链表的第一个节点是根节点，左边不需要其他操作；
+///       如果左子树不为空，转换左子树，二叉查找树对应双向有序链表的第一个节点就是左子树转换后双向有序链表的第一个节点，同时将根节点和左子树转换后的双向有序链 表的最后一个节点连接；
+///       如果右子树为空，对应双向有序链表的最后一个节点是根节点，右边不需要其他操作；
+///       如果右子树不为空，对应双向有序链表的最后一个节点就是右子树转换后双向有序链表的最后一个节点，同时将根节点和右子树转换后的双向有序链表的第一个节点连 接。
 void Convert(TreeNode* root, TreeNode* &pFirstNode,TreeNode* &pLastNode)
 {
 	TreeNode* pFirstLeft, *pLastLeft, *pFirstRight, *pLastRight;
@@ -122,7 +135,10 @@ void Convert(TreeNode* root, TreeNode* &pFirstNode,TreeNode* &pLastNode)
 
 }
 
-
+/// 求二叉树第K层的结点个数
+/// 递归：如果二叉树为空或者k<1返回0
+///       如果二叉树不为空且k == 1.返回1
+///       如果二叉树不为空且k>1,返回左子树中k-1层的结点个数与右子树k-1层结点个数之和
 int GetNodeNumKthLevel(TreeNode* root, int k)
 {
 	if(root == NULL || k < 1 )
@@ -135,6 +151,10 @@ int GetNodeNumKthLevel(TreeNode* root, int k)
 	return (numLeft + numRight);
 }
 
+/// 求二叉树中叶子结点的个数
+/// 递归：如果二叉树为空，返回0
+///       如果二叉树不为空且左右子树为空，返回1
+///       如果二叉树不为空，且左右子树不同时为空，返回左子树中叶子结点的个数加上右子树中叶子结点个数
 int GetLeafNodeNum(TreeNode* root)
 {
 	if(root == NULL)
@@ -145,7 +165,11 @@ int GetLeafNodeNum(TreeNode* root)
 	int numRight = GetLeafNodeNum(root->right);
 	return (numLeft +numRight);
 }
-
+/// 判断两个二叉树结构是否相同
+/// 不考虑数据内容，结构相同以为着对应左子树和右子树都结构相同
+/// 递归：如果二叉树都为空，返回真
+/// 如果两颗二叉树一颗为空，另一颗不为空，返回false
+/// 如果两颗二叉树都不为空，如果对应的左子树和右子树都同构返回true，其他返回false
 bool StructureCmp(TreeNode* root1, TreeNode* root2)
 {
 	if(root1 == NULL && root2 == NULL)
