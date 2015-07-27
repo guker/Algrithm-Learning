@@ -1,7 +1,7 @@
 ///+++++++++++++++++++++++++++++++++++++++++++++++++
 ///
 ///               hashtable class
-///
+///采用开链法处理冲突，hashtable只存储唯一的元素，不存在重复
 ///                 hqwsky 2015
 ///
 ///+++++++++++++++++++++++++++++++++++++++++++++++++
@@ -17,13 +17,14 @@ using namespace std;
 class hashtable
 {
 public:
+    /// n 为构造hashtable的buckets(桶)数量
 	hashtable(size_t n);
 	~hashtable();
-
+    /// 插入元素，若元素不存在，插入成功返回true，若元素存在返回false
 	bool insert(const int val);
-
+    /// 查找元素是否在表中出现
     bool find(const int val);
-
+    /// 删除元素，若元素存在，删除成功返回true，如元素不存在则删除失败，返回false
 	bool erase(const int val);
 
 	void clear();
@@ -31,22 +32,23 @@ public:
 	size_t size();
 
 private:
+   /// bucket中的结点
 	struct hashtable_node
 	{
 		int val;
 		hashtable_node* next;
 		hashtable_node(int _val,hashtable_node* _next = NULL):val(_val),next(_next){}
 	};
-
+    /// 禁止拷贝
 	hashtable(const hashtable& rhs);
 	hashtable& operator=(const hashtable& rhs);
-	
+	/// hash函数
 	size_t hash(unsigned int long x);
-
+    /// 寻找大于等于n且最接近n的质数
 	unsigned long next_prime(unsigned long n);
-
+    /// bucket向量表
 	vector<hashtable_node*> buckets;
-
+   
 	size_t num_elements;
 
 };
@@ -70,7 +72,7 @@ bool hashtable::insert(const int val)
 	if(find(val))
 		return false;
 	const size_t k = hash(val);
-
+    /// 将新结点直接插入到链表的头部
 	hashtable_node* tmp = new hashtable_node(val);
 	tmp->next = buckets[k];
 	buckets[k] = tmp;
@@ -151,7 +153,7 @@ unsigned long hashtable::next_prime(unsigned long n)
         50331653,    100663319,    201326611,    402653189,  805306457,    
         1610612741,  3221225473ul, 4294967291ul                                          
     };  
-
+    /// 寻找大于等于n且最接近n的质数
 	int i =0;
 	while(i < num_primes && prime_list[i] < n)
 		i++;
