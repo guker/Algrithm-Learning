@@ -182,7 +182,9 @@ bool StructureCmp(TreeNode* root1, TreeNode* root2)
 	return (resultLeft && resultRight);
 }
 
-
+/// 判断二叉树是否为平衡二叉树
+/// 递归解法：如果二叉树为空，返回真
+///           如果二叉树不为空，如果左子树和右子树都是AVL树，且左子树和右子树高度相差不大于1，返回真，其他返回假
 bool IsAVL(TreeNode* root, int& height)
 {
 	if(root == NULL)
@@ -207,6 +209,9 @@ bool IsAVL(TreeNode* root, int& height)
 	}
 }
 
+/// 求二叉树的镜像
+/// 递归解法：如果二叉树为空，返回空
+///           如果二叉树不为空，求左子树和右子树的镜像，然后交换左子树和右子树
 TreeNode* Mirror(TreeNode* root)
 {
 	if(root == NULL)
@@ -218,7 +223,9 @@ TreeNode* Mirror(TreeNode* root)
 	root->right = pLeft;
 	return root;
 }
-
+/// 求二叉树中两个结点的最低公共祖先结点
+/// 递归解法：如果两个结点分别在根结点的左子树和右子树，则返回根结点
+///           如果两个结点都在左子树，则递归处理左子树，如果两个结点都在右子树，则递归处理右子树
 bool FindNode(TreeNode* root, TreeNode* pNode)
 {
 	if(root == NULL || pNode == NULL)
@@ -251,7 +258,10 @@ TreeNode* GetLastCommonParent(TreeNode* root,
 	}
 }
 
-
+/// 求二叉树中的结点的最大距离
+///  递归解法：如果二叉树为空，返回0，同时记录左子树和右子树的深度，都为0
+///            如果二叉树不为空，最大距离么实在左子树中的最大距离，要么是在右子树中的最大距离，要么是左子树结点中到根节点的最大
+///            距离+右子树结点中到根节点的最大距离，同时记录左子树和右子树结点中到根结点的最大距离
 
 int GetMaxDistance(TreeNode* root,int& maxLeft,int& maxRight)
 {
@@ -287,7 +297,12 @@ int GetMaxDistance(TreeNode* root,int& maxLeft,int& maxRight)
 	return std::max(std::max(maxDistLeft,maxDistRight),maxLeft+maxRight);
 }
 
-
+/// 由前序遍历序列和中序遍历序列重建二叉树
+/// 分析：二叉树前序遍历序列中，第一个元素总是树的根结点的值，中序遍历序列中，左子树的结点的值位于根节点的值的左边，右子树
+///       的结点的值位于根节点的值的右边
+/// 递归解答：如果前序序列为空或中序序列为空或结点个数小于等于0，返回NULL
+///           创建根节点，前序遍历的第一个数据就是根节点的值，在中序遍历序列中找到根节点的位置，可分别得知左子树和右子树
+///           的前序和中序遍历序列，重建左右子树
 TreeNode* ReBuildBinaryTree(int* pPreOrder, int* pInOrder, int nodeNum)
 {
 	if(pPreOrder == NULL || pInOrder == NULL || nodeNum <= 0)
@@ -313,7 +328,6 @@ TreeNode* ReBuildBinaryTree(int* pPreOrder, int* pInOrder, int nodeNum)
 
 	int nodeNumLeft = rootPositionInOrder;
 	int* pPreOrderLeft = pPreOrder + 1;
-	int* pInOrderLeft = pInOrder + 1;
 	int* pInOrderLeft = pInOrder;
 	root->left = ReBuildBinaryTree(pPreOrderLeft,pInOrderLeft,nodeNumLeft);
 
@@ -325,7 +339,10 @@ TreeNode* ReBuildBinaryTree(int* pPreOrder, int* pInOrder, int nodeNum)
 	return root;
 }
 
-
+/// 判断二叉树是不是完全二叉树
+/// 若设二叉树的深度为h，除了第h层外，其他各层(1~h-1)的结点树都达到最大个数，第h层所有结点都连续集中在最左边，这就是完全二叉树
+/// 按层序遍历二叉树，当遇到一个结点的左子树为空，则该结点的右子树必须为空，且后边遍历的结点左右子树都必须为空，否则不是
+/// 完全二叉树
 bool IsCompleteBinaryTree(TreeNode* root)
 {
 	if(root == NULL)
