@@ -24,7 +24,7 @@ typedef struct
 
 
 bool visited[MAX];
-
+/// 邻接矩阵 无向图
 void creatMGraph(MGraph& G)
 {
 	int i, j;
@@ -44,7 +44,8 @@ void creatMGraph(MGraph& G)
 		G.edges[s][t] = G.edges[t][s] = v;
 	}
 }
-
+/// 深度优先遍历 
+/// 递归实现
 void DFS(MGraph G, int v)
 {
 	int i;
@@ -56,7 +57,8 @@ void DFS(MGraph G, int v)
 			DFS(G,i);
 	}
 }
-
+/// 深度优先遍历
+/// 栈实现
 void dfs(MGraph G,int v)
 {
 	stack<int> s;
@@ -82,7 +84,8 @@ void dfs(MGraph G,int v)
 	}
 }
 
-
+/// 广度优先遍历
+/// 队列实现
 void BFS(MGraph G, int v)
 {
 	queue<int> q;
@@ -117,8 +120,8 @@ int main()
 		G.n = n;
 		G.e = e;
 		creatMGraph(G);
-		//DFS(G,0);
-		//dfs(G,0);
+		DFS(G,0);
+		dfs(G,0);
 		BFS(G,0);
 	}
 
