@@ -1,7 +1,7 @@
 /*++++++++++++++++++++++++++++++++++++++++++++++
-*                 说明
-*     使用STL的优先队列实现最大堆 topK
-*     时间复杂度O(N*logN)
+*                 璇存槑
+*     浣跨敤STL鐨勪紭鍏堥槦鍒楀疄鐜版渶澶у爢 topK
+*     鏃堕棿澶嶆潅搴(N*logN)
 *          
 *     @date  2015/08/05
 *
@@ -14,18 +14,18 @@ using std::cin;
 using std::cout;
 using std::endl;
 
-#define HEAP_SIZE  2   ///堆的大小
+#define HEAP_SIZE  2   ///鍫嗙殑澶у皬
 
 int main()
 {
 	int num[] = {5,-6,1,3,4,9,0,-1,-2};
-    /// 优先队列
+    /// 浼樺厛闃熷垪
 	std::priority_queue<int> q;
-	/// 数组大小
+	/// 鏁扮粍澶у皬
 	int len = sizeof(num)/(sizeof(int));
 	for(int i =0; i<len; ++i)
 	{
-		if(q.size() <= HEAP_SIZE)
+		if(q.size() < HEAP_SIZE)
 			q.push(num[i]);
 		else
 		{
