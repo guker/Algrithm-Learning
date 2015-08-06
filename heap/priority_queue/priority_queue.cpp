@@ -18,6 +18,34 @@ using std::endl;
 
 int main()
 {
+	/*
+	///最小堆
+	std::priority_queue<int,vector<int>,greater<int> > q;
+	const int size = 2;
+	int num[]={2,3,4,6,1,2};
+	int len = sizeof(num)/sizeof(int);
+	int i =0;
+	while(i<len)
+	{
+		if(q.size()<size)
+		{
+			q.push(num[i]);
+			i++;
+		}
+		else
+		{
+			if(num[i]>q.top())
+			{
+				q.pop();
+				q.push(num[i]);
+				i++;
+			}
+			else
+				i++;
+		}
+
+	}
+	*/
 	int num[] = {5,-6,1,3,4,9,0,-1,-2};
     /// 优先队列
 	std::priority_queue<int> q;
@@ -30,8 +58,14 @@ int main()
 		else
 		{
 			///cout<<q.top()<<endl;
-			q.pop();
-			q.push(num[i]);
+			if(num[i]<q.top())
+			{
+				q.pop();
+				q.push(num[i]);
+				i++;
+			}
+			else
+				i++;
 		}
 	}
 	return 0;
