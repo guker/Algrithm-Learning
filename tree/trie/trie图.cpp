@@ -119,10 +119,10 @@ void TrieTree::build()
 				/// 那么当前结点的后缀结点就是父结点的后缀结点通过ch这样的一条边所到达
 				/// 的结点，如果父结点的后缀结点不存在这样的边，此时我们需要看后缀结点的
 				/// 后缀结点是否存在ch这样的一条边，如此递归。
-				Node *prev=proot->prev;//父结点的前缀结点
+				Node *prev=proot->prev;//父结点的前缀指针
 				while(prev)
 				{
-					if(prev->next[i]!=NULL)
+					if(prev->next[i]!=NULL) /// 父结点的后缀结点存在ch这条边
 					{
 						p->prev=prev->next[i];//设置孩子结点的前缀结点 
 						if(p->prev->bad==true)
