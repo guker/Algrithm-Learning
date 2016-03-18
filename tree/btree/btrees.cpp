@@ -1,33 +1,413 @@
 /*
-B树是为磁盘或其他直接存储设备设计的一种平衡查找树,每一个结点箭头指向的我们称为入度，
-指出去的称为出度。树结构的结点入度都是1，不然就变成图了.
-所以我们一般说树的度就是指树结点的出度，也就是一个结点的子结点个数。
-
-定义B树(假设一棵树的最小度数为M):
-1.每个结点至少有M-1个关键码，至多有2M-1个关键码；
-2.除根结点和叶子结点外，每个结点至少有M个子结点，至多有2M个子结点；
-3.根结点至少有2个子结点，唯一例外是只有根结点的情况，此时没有子结点；
-4.所有叶子结点在同一层。
-
-每个结点存放着关键字和指向子结点的指针，看出指针比关键码多一个。
-
-当M=2时，B树为最简单的，每个内结点有2个、3个或4个子女，也称2-3-4树。
+一棵B树T是具有如下性质的有根树(根为root[T])：
+1）每个结点x有如下域：
+a）n[x]，当前存储在结点x中的关键字个数； 
+b）n[x]个关键字本身，以非降序存放，因此key1 [x]≤key2[x]≤…≤keyn[x][x]；
+c）leaf[x]，是一个布尔值，如果x是叶子结点的话，则它为TRUE，如果x为一个内结点，则它为FALSE。
+2）每个内结点x还包含n[x]+1个指向其子女的指针c1[x]，c2[x]，…，cn[x]+1[x]。叶结点没有子女，故它们的ci域无定义。
+3）各关键字Keyi[x]对存储在各子树中的关键字范围加以分隔：如果ki为存储在以ci[x]为根的子树中的关键字，则k1≤key1[x]≤k2≤key2[x]≤…≤keyn[x][x]≤kn[x]+1
+4）每个叶结点具有相同的深度，即树的高度h。
+5）每一个结点能包含的关键字数有一个上界和下界。这些界可用一个称作B树的最小度数（即一个结点中可指向的孩子结点个数）的固定整数t≥2来表示。
+a）每个非根的结点必须至少有t-1个关键字，每个非根的内结点必须至少有t个子女。如果树是非空的，则根结点至少包含一个关键字。
+b）每个结点可包含至多2t-1个关键字。所以一个内结点至多可有2t个子女。我们说一个结点是满的，如果它恰好有2t-1个关键字。
 */
 
+#pragma once  
+template<class T>  
+class CBTree  
+{  
+private:  
+	static const int M = 3;                  //B树的最小度数  
+	static const int KEY_MAX = 2*M-1;        //节点包含关键字的最大个数  
+	static const int KEY_MIN = M-1;          //非根节点包含关键字的最小个数  
+	static const int CHILD_MAX = KEY_MAX+1;  //孩子节点的最大个数  
+	static const int CHILD_MIN = KEY_MIN+1;  //孩子节点的最小个数  
+	struct Node  
+	{  
+		bool isLeaf;             //是否是叶子节点  
+		int keyNum;              //节点包含的关键字数量  
+		T keyValue[KEY_MAX];     //关键字的值数组  
+		Node *pChild[CHILD_MAX]; //子树指针数组  
 
-# define M 2 
-/* B树的最小度数M>=2 
-* 每个非根结点必须至少有M-1个关键字。每个非根结点至少有M个子女 
-* 每个结点可包含至多2M-1个关键字。所以一个内结点至多可以有2M个子女 
-*/ 
-struct btnode{ /* B树结点 */ 
-int keyNum; /* 节点中键的数目 */ 
-int k[2*M-1]; /* 键 */ 
-struct btnode* p[2*M]; /* 指向子树的指针 */ 
-bool isleaf; 
+		Node(bool b=true, int n=0)  
+			:isLeaf(b), keyNum(n){}  
+	};  
+public:  
+	CBTree()  
+	{  
+		m_pRoot = NULL;  //创建一棵空的B树  
+	}  
+
+	~CBTree()  
+	{  
+		clear();  
+	}  
+
+	bool insert(const T &key)    //向B数中插入新结点key  
+	{  
+		if (contain(key))  //检查该关键字是否已经存在  
+		{  
+			return false;  
+		}  
+		else  
+		{  
+			if (m_pRoot==NULL)//检查是否为空树  
+			{  
+				m_pRoot = new Node();  
+			}  
+			if (m_pRoot->keyNum==KEY_MAX) //检查根节点是否已满  
+			{  
+				Node *pNode = new Node();  //创建新的根节点  
+				pNode->isLeaf = false;  
+				pNode->pChild[0] = m_pRoot;  
+				splitChild(pNode, 0, m_pRoot);  
+				m_pRoot = pNode;  //更新根节点指针  
+			}  
+			insertNonFull(m_pRoot, key);  
+			return true;  
+		}  
+	}  
+
+	bool remove(const T &key)    //从B中删除结点key  
+	{  
+		if (!search(m_pRoot, key))  //不存在  
+		{  
+			return false;  
+		}  
+		if (m_pRoot->keyNum==1)//特殊情况处理  
+		{  
+			if (m_pRoot->isLeaf)  
+			{  
+				clear();  
+				return true;  
+			}  
+			else  
+			{  
+				Node *pChild1 = m_pRoot->pChild[0];  
+				Node *pChild2 = m_pRoot->pChild[1];  
+				if (pChild1->keyNum==KEY_MIN&&pChild2->keyNum==KEY_MIN)  
+				{  
+					mergeChild(m_pRoot, 0);  
+					deleteNode(m_pRoot);  
+					m_pRoot = pChild1;  
+				}  
+			}  
+		}  
+		recursive_remove(m_pRoot, key);  
+		return true;  
+	}  
+	void display()const //打印树的关键字  
+	{  
+		displayInConcavo(m_pRoot,KEY_MAX*10);  
+	}  
+	bool contain(const T &key)const   //检查该key是否存在于B树中  
+	{  
+		return search(m_pRoot, key);  
+	}  
+	void clear()                      //清空B树  
+	{  
+		recursive_clear(m_pRoot);  
+		m_pRoot = NULL;  
+	}  
+private:  
+	//删除树  
+	void recursive_clear(Node *pNode)  
+	{  
+		if (pNode!=NULL)  
+		{  
+			if (!pNode->isLeaf)  
+			{  
+				for(int i=0; i<=pNode->keyNum; ++i)  
+					recursive_clear(pNode->pChild[i]);  
+			}  
+			deleteNode(pNode);  
+		}  
+	}  
+
+	//删除节点  
+	void deleteNode(Node *&pNode)  
+	{  
+		if (pNode!=NULL)  
+		{  
+			delete pNode;  
+			pNode = NULL;  
+		}  
+	}  
+
+	//查找关键字  
+	bool search(Node *pNode, const T &key)const   
+	{  
+		if (pNode==NULL)  //检测节点指针是否为空，或该节点是否为叶子节点  
+		{  
+			return false;  
+		}  
+		else  
+		{  
+			int i;  
+			for (i=0; i<pNode->keyNum && key>*(pNode->keyValue+i); ++i)//找到使key<=pNode->keyValue[i]成立的最小下标i  
+			{  
+			}  
+			if (i<pNode->keyNum && key==pNode->keyValue[i])  
+			{  
+				return true;  
+			}  
+			else  
+			{  
+				if (pNode->isLeaf)   //检查该节点是否为叶子节点  
+				{  
+					return false;  
+				}  
+				else  
+				{  
+					return search(pNode->pChild[i], key);  
+				}  
+			}  
+		}  
+	}  
+
+	//分裂子节点  
+	void splitChild(Node *pParent, int nChildIndex, Node *pChild)    
+	{  
+		//将pChild分裂成pLeftNode和pChild两个节点  
+		Node *pRightNode = new Node();//分裂后的右节点  
+		pRightNode->isLeaf = pChild->isLeaf;  
+		pRightNode->keyNum = KEY_MIN;  
+		int i;  
+		for (i=0; i<KEY_MIN; ++i)//拷贝关键字的值  
+		{  
+			pRightNode->keyValue[i] = pChild->keyValue[i+CHILD_MIN];  
+		}  
+		if (!pChild->isLeaf)  //如果不是叶子节点，拷贝孩子节点指针  
+		{  
+			for (i=0; i<CHILD_MIN; ++i)  
+			{  
+				pRightNode->pChild[i] = pChild->pChild[i+CHILD_MIN];  
+			}  
+		}  
+
+		pChild->keyNum = KEY_MIN;  //更新左子树的关键字个数  
+
+		for (i=pParent->keyNum; i>nChildIndex; --i)//将父节点中的nChildIndex后的所有关键字的值和子树指针向后移一位  
+		{  
+			pParent->pChild[i+1] = pParent->pChild[i];  
+			pParent->keyValue[i] = pParent->keyValue[i-1];  
+		}  
+		++pParent->keyNum;  //更新父节点的关键字个数  
+		pParent->pChild[nChildIndex+1] = pRightNode;  //存储右子树指针  
+		pParent->keyValue[nChildIndex] = pChild->keyValue[KEY_MIN];//把节点的中间值提到父节点  
+	}  
+
+	//在非满节点中插入关键字  
+	void insertNonFull(Node *pNode, const T &key)  
+	{  
+		int i = pNode->keyNum;  //获取节点内关键字个数  
+		if (pNode->isLeaf)      //pNode是叶子节点  
+		{  
+			while (i>0&&key<pNode->keyValue[i-1])   //从后往前，查找关键字的插入位置  
+			{  
+				pNode->keyValue[i] = pNode->keyValue[i-1];  //向后移位  
+				--i;  
+			}  
+			pNode->keyValue[i] = key;  //插入关键字的值  
+			++pNode->keyNum; //更新节点关键字的个数  
+		}  
+		else//pNode是内节点  
+		{  
+			while(i>0&&key<pNode->keyValue[i-1])   //从后往前，查找关键字的插入的子树  
+				--i;  
+			Node *pChild = pNode->pChild[i];  //目标子树结点指针   
+			if (pChild->keyNum==KEY_MAX)  //子树节点已满  
+			{  
+				splitChild(pNode, i, pChild);//分裂子树节点  
+				if(key>pNode->keyValue[i])   //确定目标子树  
+					pChild = pNode->pChild[i+1];  
+			}  
+			insertNonFull(pChild, key);  //插入关键字到目标子树节点  
+		}  
+	}  
+
+	//用括号打印树  
+	void displayInConcavo(Node *pNode, int count)const  
+	{  
+		if (pNode!=NULL)  
+		{  
+			int i, j;  
+			for (i=0; i<pNode->keyNum; ++i)  
+			{  
+				if (!pNode->isLeaf)  
+				{  
+					displayInConcavo(pNode->pChild[i], count-2);  
+				}  
+				for (j=count; j>=0; --j)  
+				{  
+					cout<<"-";  
+				}  
+				cout<<pNode->keyValue[i]<<endl;  
+			}  
+			if (!pNode->isLeaf)  
+			{  
+				displayInConcavo(pNode->pChild[i], count-2);  
+			}  
+		}  
+	}  
+
+	//合并两个子节点  
+	void mergeChild(Node *pParent, int index)  
+	{  
+		Node *pChild1 = pParent->pChild[index];  
+		Node *pChild2 = pParent->pChild[index+1];  
+		//将pChild2数据合并到pChild1  
+		pChild1->keyNum = KEY_MAX;  
+		pChild1->keyValue[KEY_MIN] = pParent->keyValue[index];//将父节点index的值下移  
+		int i;  
+		for (i=0; i<KEY_MIN; ++i)  
+		{  
+			pChild1->keyValue[i+KEY_MIN+1] = pChild2->keyValue[i];  
+		}  
+		if (!pChild1->isLeaf)  
+		{  
+			for (i=0; i<CHILD_MIN; ++i)  
+			{  
+				pChild1->pChild[i+CHILD_MIN] = pChild2->pChild[i];  
+			}  
+		}  
+
+		//父节点删除index的key，index后的往前移一位  
+		--pParent->keyNum;  
+		for(i=index; i<pParent->keyNum; ++i)  
+		{  
+			pParent->keyValue[i] = pParent->keyValue[i+1];  
+			pParent->pChild[i+1] = pParent->pChild[i+2];  
+		}  
+		deleteNode(pChild2);  //删除pChild2  
+	}  
+
+	//递归的删除关键字  
+	void recursive_remove(Node *pNode, const T &key)  
+	{  
+		int i=0;  
+		while(i<pNode->keyNum&&key>pNode->keyValue[i])  
+			++i;  
+		if (i<pNode->keyNum&&key==pNode->keyValue[i])//关键字key在节点pNode中  
+		{  
+			if (pNode->isLeaf)//pNode是个叶节点  
+			{  
+				//从pNode中删除k  
+				--pNode->keyNum;  
+				for (; i<pNode->keyNum; ++i)  
+				{  
+					pNode->keyValue[i] = pNode->keyValue[i+1];  
+				}  
+				return;  
+			}  
+			else//pNode是个内节点  
+			{  
+				Node *pChildPrev = pNode->pChild[i];//节点pNode中前于key的子节点  
+				Node *pChildNext = pNode->pChild[i+1];//节点pNode中后于key的子节点  
+				if (pChildPrev->keyNum>=CHILD_MIN)//节点pChildPrev中至少包含CHILD_MIN个关键字  
+				{  
+					T prevKey = getPredecessor(pChildPrev); //获取key的前驱关键字  
+					recursive_remove(pChildPrev, prevKey);  
+					pNode->keyValue[i] = prevKey;     //替换成key的前驱关键字  
+					return;  
+				}  
+				else if (pChildNext->keyNum>=CHILD_MIN)//节点pChildNext中至少包含CHILD_MIN个关键字  
+				{  
+					T nextKey = getSuccessor(pChildNext); //获取key的后继关键字  
+					recursive_remove(pChildNext, nextKey);  
+					pNode->keyValue[i] = nextKey;     //替换成key的后继关键字  
+					return;  
+				}  
+				else//节点pChildPrev和pChildNext中都只包含CHILD_MIN-1个关键字  
+				{  
+					mergeChild(pNode, i);  
+					recursive_remove(pChildPrev, key);  
+				}  
+			}  
+		}  
+		else//关键字key不在节点pNode中  
+		{  
+			Node *pChildNode = pNode->pChild[i];//包含key的子树根节点  
+			if (pChildNode->keyNum==KEY_MIN)//只有t-1个关键字  
+			{  
+				Node *pLeft = i>0 ? pNode->pChild[i-1] : NULL;  //左兄弟节点  
+				Node *pRight = i<pNode->keyNum ? pNode->pChild[i+1] : NULL;//右兄弟节点  
+				int j;  
+				if (pLeft&&pLeft->keyNum>=CHILD_MIN)//左兄弟节点至少有CHILD_MIN个关键字  
+				{  
+					//父节点中i-1的关键字下移至pChildNode中  
+					for (j=pChildNode->keyNum; j>0; --j)    
+					{  
+						pChildNode->keyValue[j] = pChildNode->keyValue[j-1];  
+					}  
+					pChildNode->keyValue[0] = pNode->keyValue[i-1];  
+
+					if (!pLeft->isLeaf)    
+					{  
+						for (j=pChildNode->keyNum+1; j>0; --j) //pLeft节点中合适的子女指针移植到pChildNode中  
+						{  
+							pChildNode->pChild[j] = pChildNode->pChild[j-1];  
+						}  
+						pChildNode->pChild[0] = pLeft->pChild[pLeft->keyNum];  
+					}  
+					++pChildNode->keyNum;  
+					pNode->keyValue[i] = pLeft->keyValue[pLeft->keyNum-1];//pLeft节点中的最大关键字上升到pNode中  
+					--pLeft->keyNum;  
+				}  
+				else if (pRight&&pRight->keyNum>=CHILD_MIN)//右兄弟节点至少有CHILD_MIN个关键字  
+				{  
+					//父节点中i的关键字下移至pChildNode中  
+					pChildNode->keyValue[pChildNode->keyNum] = pNode->keyValue[i];  
+					++pChildNode->keyNum;  
+					pNode->keyValue[i] = pRight->keyValue[0];//pRight节点中的最小关键字上升到pNode中  
+					--pRight->keyNum;  
+					for (j=0; j<pRight->keyNum; ++j)  
+					{  
+						pRight->keyValue[j] = pRight->keyValue[j+1];  
+					}  
+					if (!pRight->isLeaf)    
+					{  
+						pChildNode->pChild[pChildNode->keyNum] = pRight->pChild[0];//pRight节点中合适的子女指针移植到pChildNode中  
+						for (j=0; j<=pRight->keyNum; ++j)  
+						{  
+							pRight->pChild[j] = pRight->pChild[j+1];  
+						}  
+					}  
+				}  
+				//左右兄弟节点都只包含CHILD_MIN-1个节点  
+				else if (pLeft)//与左兄弟合并  
+				{  
+					mergeChild(pNode, i-1);  
+					pChildNode = pLeft;  
+				}  
+				else if (pRight)//与右兄弟合并  
+				{  
+					mergeChild(pNode, i);  
+
+				}  
+			}  
+			recursive_remove(pChildNode, key);  
+		}  
+	}  
+
+	T getPredecessor(Node *pNode)//找到前驱关键字  
+	{  
+		while (!pNode->isLeaf)  
+		{  
+			pNode = pNode->pChild[pNode->keyNum];  
+		}  
+		return pNode->keyValue[pNode->keyNum-1];  
+	}  
+
+	T getSuccessor(Node *pNode)//找到后继关键字  
+	{  
+		while (!pNode->isLeaf)  
+		{  
+			pNode = pNode->pChild[0];  
+		}  
+		return pNode->keyValue[0];  
+	}  
+
+private:  
+	Node * m_pRoot;  //B树的根节点  
 }; 
-
-struct searchResult{ 
-struct btnode *ptr; /* 数据所在节点指针 */ 
-int pos; /* 数据在节点中位置 */ 
-};
