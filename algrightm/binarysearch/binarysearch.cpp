@@ -1,7 +1,7 @@
 /*
-*                     ¶ş·Ö²éÕÒ£¨binary search£©
+*                     äºŒåˆ†æŸ¥æ‰¾ï¼ˆbinary searchï¼‰
 *
-*       Ëã·¨Ë¼Ïë£º´ÓÊı×éÖĞ¼ä¿ªÊ¼£¬Ã¿´ÎÅÅ³ıÒ»°ëµÄÊı¾İ£¬Ê±¼ä¸´ÔÓ¶ÈÎªO(lgN)
+*       ç®—æ³•æ€æƒ³ï¼šä»æ•°ç»„ä¸­é—´å¼€å§‹ï¼Œæ¯æ¬¡æ’é™¤ä¸€åŠçš„æ•°æ®ï¼Œæ—¶é—´å¤æ‚åº¦ä¸ºO(lgN)
 */
 
 #include<stdio.h>
@@ -11,7 +11,7 @@ int BinSearch(int Array[],int SizeOfArray,int key)
     int mid;  
     while (low<=high)  
     {  
-        mid = low+(high-low)/2;//Í¬(low+high)/2,ÕâÀïÎªÁË±ÜÃâÒç³ö 
+        mid = low+(high-low)/2;//åŒ(low+high)/2,è¿™é‡Œä¸ºäº†é¿å…æº¢å‡º 
         if(key>Array[mid])
 			low = mid+1;
 		else if(key < Array[mid])
@@ -24,11 +24,13 @@ int BinSearch(int Array[],int SizeOfArray,int key)
 }
 
 /*  
-*     ¹Û²ì·¢ÏÖ£¬Èç¹û²éÕÒ²»³É¹¦£¬ÔòlowµÄÖµÇ¡ºÃÊÇkeyÓ¦¸ÃÔÚÊı×éÖĞ²åÈëµÄÎ»ÖÃ,¶øÇÒ´ËÊ±low = high +1
+*     è§‚å¯Ÿå‘ç°ï¼Œå¦‚æœæŸ¥æ‰¾ä¸æˆåŠŸï¼Œåˆ™lowçš„å€¼æ°å¥½æ˜¯keyåº”è¯¥åœ¨æ•°ç»„ä¸­æ’å…¥çš„ä½ç½®,è€Œä¸”æ­¤æ—¶low = high +1.
+*     å‡è®¾æŸä¸ªæ—¶å€™[low,high],æ­¤æ—¶low+1=highï¼Œmid = lowï¼Œæ˜¾ç„¶æ­¤æ—¶key>a[mid],æ‰€ä»¥low = low+1=highï¼Œ
+*     mid = low+high/2 = high,æ­¤æ—¶key<a[mid],æ‰€ä»¥high = mid-1=high-1=low-1ï¼Œé€€å‡ºå¾ªç¯
 *
-*   ¼Ù¶¨ÓĞĞòÊı×éa={1, 3, 4, 7, 8}£¬ ÄÇÃ´Èç¹ûkey=0£¬ÔòÏÔÈ»key²»ÔÚÊı×éÖĞ£¬
-*   Ôò¶ş·Ö²éÕÒËã·¨×îÖÕ»áÊ¹µÃlow=0 > high=-1 ÍË³öÑ­»·£»Èç¹ûkey=9£¬ÔòkeyÒ²²»ÔÚÊı×éÖĞ£¬
-*   Ôò×îºólow=5 > high=4ÍË³öÑ­»·¡£Èç¹ûkey=5£¬Ôò×îºólow=3 > high=2ÍË³öÑ­»·
+*   å‡å®šæœ‰åºæ•°ç»„a={1, 3, 4, 7, 8}ï¼Œ é‚£ä¹ˆå¦‚æœkey=0ï¼Œåˆ™æ˜¾ç„¶keyä¸åœ¨æ•°ç»„ä¸­ï¼Œ
+*   åˆ™äºŒåˆ†æŸ¥æ‰¾ç®—æ³•æœ€ç»ˆä¼šä½¿å¾—low=0 > high=-1 é€€å‡ºå¾ªç¯ï¼›å¦‚æœkey=9ï¼Œåˆ™keyä¹Ÿä¸åœ¨æ•°ç»„ä¸­ï¼Œ
+*   åˆ™æœ€ålow=5 > high=4é€€å‡ºå¾ªç¯ã€‚å¦‚æœkey=5ï¼Œåˆ™æœ€ålow=3 > high=2é€€å‡ºå¾ªç¯
 *
 */
 int BinSearch01(int Array[],int SizeOfArray,int key)  
@@ -37,7 +39,7 @@ int BinSearch01(int Array[],int SizeOfArray,int key)
     int mid;  
     while (low<=high)  
     {  
-        mid = low+(high-low)/2;//Í¬(low+high)/2,ÕâÀïÎªÁË±ÜÃâÒç³ö 
+        mid = low+(high-low)/2;//åŒ(low+high)/2,è¿™é‡Œä¸ºäº†é¿å…æº¢å‡º 
         if(key>Array[mid])
 			low = mid+1;
 		else if(key < Array[mid])
@@ -49,17 +51,17 @@ int BinSearch01(int Array[],int SizeOfArray,int key)
 }
 
 /*
-*          ¶ş·Ö²éÕÒÊı×ÖµÚÒ»´Î³öÏÖµÄÎ»ÖÃ
+*          äºŒåˆ†æŸ¥æ‰¾æ•°å­—ç¬¬ä¸€æ¬¡å‡ºç°çš„ä½ç½®
 *
-*   ¿¼ÂÇÓĞĞòÊı×éÖĞ´æÔÚÖØ¸´Êı×Ö  ²Î¼û¡¶±à³ÌÖéçá¡·µÚ¾ÅÕÂ£¬Ëã·¨µÄ¾«ËèÔÚÓÚÑ­»·²»±äÊ½µÄÇÉÃîÉè¼Æ
-*   ´ËÊ±Ñ­»·ÍË³öÊ±±ØÈ»ÓĞ low+1=high£¬¶øÇÒa[low]<key<=a[high]
+*   è€ƒè™‘æœ‰åºæ•°ç»„ä¸­å­˜åœ¨é‡å¤æ•°å­—  å‚è§ã€Šç¼–ç¨‹ç ç‘ã€‹ç¬¬ä¹ç« ï¼Œç®—æ³•çš„ç²¾é«“åœ¨äºå¾ªç¯ä¸å˜å¼çš„å·§å¦™è®¾è®¡
+*   æ­¤æ—¶å¾ªç¯é€€å‡ºæ—¶å¿…ç„¶æœ‰ low+1=highï¼Œè€Œä¸”a[low]<key<=a[high]
 */
 int bsearch_first(int a[], int n, int key)  
 {  
     int low = -1, high = n;  
     while (low + 1 != high) {  
-        /*Ñ­»·²»±äÊ½a[low]<key<=a[high] && low<high*/  
-        int mid = low + (high - low) / 2; //Í¬£¨low+high£©/ 2  
+        /*å¾ªç¯ä¸å˜å¼a[low]<key<=a[high] && low<high*/  
+        int mid = low + (high - low) / 2; //åŒï¼ˆlow+highï¼‰/ 2  
         if (key> a[mid])  
             low = mid;  
         else  
@@ -72,16 +74,16 @@ int bsearch_first(int a[], int n, int key)
     return p;  
 } 
 
-/*               Ğı×ªÊı×éÔªËØ²éÕÒÎÊÌâ
-*   ¶ş·Ö²éÕÒËã·¨ÓĞÁ½¸ö¹Ø¼üµã£º1£©Êı×éÓĞĞò£»
-                            2£©¸ù¾İµ±Ç°Çø¼äµÄÖĞ¼äÔªËØÓëxµÄ´óĞ¡¹ØÏµ£¬È·¶¨ÏÂ´Î¶ş·Ö²éÕÒÔÚÇ°°ë¶ÎÇø¼ä»¹ÊÇºó°ë¶ÎÇø¼ä½øĞĞ
+/*               æ—‹è½¬æ•°ç»„å…ƒç´ æŸ¥æ‰¾é—®é¢˜
+*   äºŒåˆ†æŸ¥æ‰¾ç®—æ³•æœ‰ä¸¤ä¸ªå…³é”®ç‚¹ï¼š1ï¼‰æ•°ç»„æœ‰åºï¼›
+                            2ï¼‰æ ¹æ®å½“å‰åŒºé—´çš„ä¸­é—´å…ƒç´ ä¸xçš„å¤§å°å…³ç³»ï¼Œç¡®å®šä¸‹æ¬¡äºŒåˆ†æŸ¥æ‰¾åœ¨å‰åŠæ®µåŒºé—´è¿˜æ˜¯ååŠæ®µåŒºé—´è¿›è¡Œ
 *
-*   ×ĞÏ¸·ÖÎö¸ÃÎÊÌâ£¬¿ÉÒÔ·¢ÏÖ£¬Ã¿´Î¸ù¾İlowºÍhighÇó³ömidºó£¬mid×ó±ß£¨[low, mid]£©ºÍÓÒ±ß£¨[mid, high]£©ÖÁÉÙÒ»¸öÊÇÓĞĞòµÄ¡£
-*   a[mid]·Ö±ğÓëa[left]ºÍa[right]±È½Ï£¬È·¶¨ÄÄÒ»¶ÎÊÇÓĞĞòµÄ¡£
+*   ä»”ç»†åˆ†æè¯¥é—®é¢˜ï¼Œå¯ä»¥å‘ç°ï¼Œæ¯æ¬¡æ ¹æ®lowå’Œhighæ±‚å‡ºmidåï¼Œmidå·¦è¾¹ï¼ˆ[low, mid]ï¼‰å’Œå³è¾¹ï¼ˆ[mid, high]ï¼‰è‡³å°‘ä¸€ä¸ªæ˜¯æœ‰åºçš„ã€‚
+*   a[mid]åˆ†åˆ«ä¸a[left]å’Œa[right]æ¯”è¾ƒï¼Œç¡®å®šå“ªä¸€æ®µæ˜¯æœ‰åºçš„ã€‚
 *
-*   Èç¹û×ó±ßÊÇÓĞĞòµÄ£¬Èôx<a[mid]ÇÒx>a[left], Ôòright=mid-1£»ÆäËûÇé¿ö£¬left =mid+1£»
+*   å¦‚æœå·¦è¾¹æ˜¯æœ‰åºçš„ï¼Œè‹¥x<a[mid]ä¸”x>a[left], åˆ™right=mid-1ï¼›å…¶ä»–æƒ…å†µï¼Œleft =mid+1ï¼›
 *
-*   Èç¹ûÓÒ±ßÊÇÓĞĞòµÄ£¬Èôx> a[mid] ÇÒx<a[right] Ôòleft=mid+1£»ÆäËûÇé¿ö£¬right =mid-1£»
+*   å¦‚æœå³è¾¹æ˜¯æœ‰åºçš„ï¼Œè‹¥x> a[mid] ä¸”x<a[right] åˆ™left=mid+1ï¼›å…¶ä»–æƒ…å†µï¼Œright =mid-1ï¼›
 */
 int bsearch_rotate(int a[], int n, int t)  
 {  
@@ -90,12 +92,12 @@ int bsearch_rotate(int a[], int n, int t)
         int mid = low + (high-low) / 2;  
         if (t == a[mid])  
             return mid;  
-        if (a[mid] >= a[low]) { //Êı×é×ó°ëÓĞĞò  
+        if (a[mid] >= a[low]) { //æ•°ç»„å·¦åŠæœ‰åº  
             if (t >= a[low] && t < a[mid])  
                 high = mid - 1;  
             else  
                 low = mid + 1;  
-        } else {       //Êı×éÓÒ°ë¶ÎÓĞĞò  
+        } else {       //æ•°ç»„å³åŠæ®µæœ‰åº  
             if (t > a[mid] && t <= a[high])  
                 low = mid + 1;  
             else  
