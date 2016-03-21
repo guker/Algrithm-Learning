@@ -1,5 +1,5 @@
 /**
- * C: ÁÚ½Ó¾ØÕóÍ¼±íÊ¾µÄ"ÎŞÏòÍ¼(Matrix Undirected Graph)"
+ * C: é‚»æ¥çŸ©é˜µå›¾è¡¨ç¤ºçš„"æ— å‘å›¾(Matrix Undirected Graph)"
  *
  * @author skywang
  * @date 2014/04/18
@@ -16,17 +16,17 @@
 #define isLetter(a)  ((((a)>='a')&&((a)<='z')) || (((a)>='A')&&((a)<='Z')))
 #define LENGTH(a)  (sizeof(a)/sizeof(a[0]))
 
-// ÁÚ½Ó¾ØÕó
+// é‚»æ¥çŸ©é˜µ
 typedef struct _graph
 {
-    char vexs[MAX];       // ¶¥µã¼¯ºÏ
-    int vexnum;           // ¶¥µãÊı
-    int edgnum;           // ±ßÊı
-    int matrix[MAX][MAX]; // ÁÚ½Ó¾ØÕó
+    char vexs[MAX];       // é¡¶ç‚¹é›†åˆ
+    int vexnum;           // é¡¶ç‚¹æ•°
+    int edgnum;           // è¾¹æ•°
+    int matrix[MAX][MAX]; // é‚»æ¥çŸ©é˜µ
 }Graph, *PGraph;
 
 /*
- * ·µ»ØchÔÚmatrix¾ØÕóÖĞµÄÎ»ÖÃ
+ * è¿”å›chåœ¨matrixçŸ©é˜µä¸­çš„ä½ç½®
  */
 static int get_position(Graph g, char ch)
 {
@@ -38,7 +38,7 @@ static int get_position(Graph g, char ch)
 }
 
 /*
- * ¶ÁÈ¡Ò»¸öÊäÈë×Ö·û
+ * è¯»å–ä¸€ä¸ªè¾“å…¥å­—ç¬¦
  */
 static char read_char()
 {
@@ -52,7 +52,7 @@ static char read_char()
 }
 
 /*
- * ´´½¨Í¼(×Ô¼ºÊäÈë)
+ * åˆ›å»ºå›¾(è‡ªå·±è¾“å…¥)
  */
 Graph* create_graph()
 {
@@ -61,7 +61,7 @@ Graph* create_graph()
     int i, p1, p2;
     Graph* pG;
     
-    // ÊäÈë"¶¥µãÊı"ºÍ"±ßÊı"
+    // è¾“å…¥"é¡¶ç‚¹æ•°"å’Œ"è¾¹æ•°"
     printf("input vertex number: ");
     scanf("%d", &v);
     printf("input edge number: ");
@@ -76,20 +76,20 @@ Graph* create_graph()
         return NULL;
     memset(pG, 0, sizeof(Graph));
 
-    // ³õÊ¼»¯"¶¥µãÊı"ºÍ"±ßÊı"
+    // åˆå§‹åŒ–"é¡¶ç‚¹æ•°"å’Œ"è¾¹æ•°"
     pG->vexnum = v;
     pG->edgnum = e;
-    // ³õÊ¼»¯"¶¥µã"
+    // åˆå§‹åŒ–"é¡¶ç‚¹"
     for (i = 0; i < pG->vexnum; i++)
     {
         printf("vertex(%d): ", i);
         pG->vexs[i] = read_char();
     }
 
-    // ³õÊ¼»¯"±ß"
+    // åˆå§‹åŒ–"è¾¹"
     for (i = 0; i < pG->edgnum; i++)
     {
-        // ¶ÁÈ¡±ßµÄÆğÊ¼¶¥µãºÍ½áÊø¶¥µã
+        // è¯»å–è¾¹çš„èµ·å§‹é¡¶ç‚¹å’Œç»“æŸé¡¶ç‚¹
         printf("edge(%d):", i);
         c1 = read_char();
         c2 = read_char();
@@ -111,7 +111,7 @@ Graph* create_graph()
 }
 
 /*
- * ´´½¨Í¼(ÓÃÒÑÌá¹©µÄ¾ØÕó)
+ * åˆ›å»ºå›¾(ç”¨å·²æä¾›çš„çŸ©é˜µ)
  */
 Graph* create_example_graph()
 {
@@ -129,24 +129,24 @@ Graph* create_example_graph()
     int i, p1, p2;
     Graph* pG;
     
-    // ÊäÈë"¶¥µãÊı"ºÍ"±ßÊı"
+    // è¾“å…¥"é¡¶ç‚¹æ•°"å’Œ"è¾¹æ•°"
     if ((pG=(Graph*)malloc(sizeof(Graph))) == NULL )
         return NULL;
     memset(pG, 0, sizeof(Graph));
 
-    // ³õÊ¼»¯"¶¥µãÊı"ºÍ"±ßÊı"
+    // åˆå§‹åŒ–"é¡¶ç‚¹æ•°"å’Œ"è¾¹æ•°"
     pG->vexnum = vlen;
     pG->edgnum = elen;
-    // ³õÊ¼»¯"¶¥µã"
+    // åˆå§‹åŒ–"é¡¶ç‚¹"
     for (i = 0; i < pG->vexnum; i++)
     {
         pG->vexs[i] = vexs[i];
     }
 
-    // ³õÊ¼»¯"±ß"
+    // åˆå§‹åŒ–"è¾¹"
     for (i = 0; i < pG->edgnum; i++)
     {
-        // ¶ÁÈ¡±ßµÄÆğÊ¼¶¥µãºÍ½áÊø¶¥µã
+        // è¯»å–è¾¹çš„èµ·å§‹é¡¶ç‚¹å’Œç»“æŸé¡¶ç‚¹
         p1 = get_position(*pG, edges[i][0]);
         p2 = get_position(*pG, edges[i][1]);
 
@@ -158,7 +158,7 @@ Graph* create_example_graph()
 }
 
 /*
- * ·µ»Ø¶¥µãvµÄµÚÒ»¸öÁÚ½Ó¶¥µãµÄË÷Òı£¬Ê§°ÜÔò·µ»Ø-1
+ * è¿”å›é¡¶ç‚¹vçš„ç¬¬ä¸€ä¸ªé‚»æ¥é¡¶ç‚¹çš„ç´¢å¼•ï¼Œå¤±è´¥åˆ™è¿”å›-1
  */
 static int first_vertex(Graph G, int v)
 {
@@ -175,7 +175,7 @@ static int first_vertex(Graph G, int v)
 }
 
 /*
- * ·µ»Ø¶¥µãvÏà¶ÔÓÚwµÄÏÂÒ»¸öÁÚ½Ó¶¥µãµÄË÷Òı£¬Ê§°ÜÔò·µ»Ø-1
+ * è¿”å›é¡¶ç‚¹vç›¸å¯¹äºwçš„ä¸‹ä¸€ä¸ªé‚»æ¥é¡¶ç‚¹çš„ç´¢å¼•ï¼Œå¤±è´¥åˆ™è¿”å›-1
  */
 static int next_vertix(Graph G, int v, int w)
 {
@@ -192,7 +192,7 @@ static int next_vertix(Graph G, int v, int w)
 }
 
 /*
- * Éî¶ÈÓÅÏÈËÑË÷±éÀúÍ¼µÄµİ¹éÊµÏÖ
+ * æ·±åº¦ä¼˜å…ˆæœç´¢éå†å›¾çš„é€’å½’å®ç°
  */
 static void DFS(Graph G, int i, int *visited)
 {                                   
@@ -200,7 +200,7 @@ static void DFS(Graph G, int i, int *visited)
 
     visited[i] = 1;
     printf("%c ", G.vexs[i]);
-    // ±éÀú¸Ã¶¥µãµÄËùÓĞÁÚ½Ó¶¥µã¡£ÈôÊÇÃ»ÓĞ·ÃÎÊ¹ı£¬ÄÇÃ´¼ÌĞøÍùÏÂ×ß
+    // éå†è¯¥é¡¶ç‚¹çš„æ‰€æœ‰é‚»æ¥é¡¶ç‚¹ã€‚è‹¥æ˜¯æ²¡æœ‰è®¿é—®è¿‡ï¼Œé‚£ä¹ˆç»§ç»­å¾€ä¸‹èµ°
     for (w = first_vertex(G, i); w >= 0; w = next_vertix(G, i, w))
     {
         if (!visited[w])
@@ -210,18 +210,19 @@ static void DFS(Graph G, int i, int *visited)
 }
 
 /*
- * Éî¶ÈÓÅÏÈËÑË÷±éÀúÍ¼
+ * æ·±åº¦ä¼˜å…ˆæœç´¢éå†å›¾
  */
 void DFSTraverse(Graph G)
 {
     int i;
-    int visited[MAX];       // ¶¥µã·ÃÎÊ±ê¼Ç
+    int visited[MAX];       // é¡¶ç‚¹è®¿é—®æ ‡è®°
 
-    // ³õÊ¼»¯ËùÓĞ¶¥µã¶¼Ã»ÓĞ±»·ÃÎÊ
+    // åˆå§‹åŒ–æ‰€æœ‰é¡¶ç‚¹éƒ½æ²¡æœ‰è¢«è®¿é—®
     for (i = 0; i < G.vexnum; i++)
         visited[i] = 0;
 
     printf("DFS: ");
+    // æ­¤æ—¶éå†æ‰€æœ‰é¡¶ç‚¹ï¼Œè€ƒè™‘åˆ°éè¿é€šå›¾
     for (i = 0; i < G.vexnum; i++)
     {
         //printf("\n== LOOP(%d)\n", i);
@@ -232,14 +233,14 @@ void DFSTraverse(Graph G)
 }
 
 /*
- * ¹ã¶ÈÓÅÏÈËÑË÷£¨ÀàËÆÓÚÊ÷µÄ²ã´Î±éÀú£©
+ * å¹¿åº¦ä¼˜å…ˆæœç´¢ï¼ˆç±»ä¼¼äºæ ‘çš„å±‚æ¬¡éå†ï¼‰
  */
 void BFS(Graph G)
 {
     int head = 0;
     int rear = 0;
-    int queue[MAX];     // ¸¨×é¶ÓÁĞ
-    int visited[MAX];   // ¶¥µã·ÃÎÊ±ê¼Ç
+    int queue[MAX];     // è¾…ç»„é˜Ÿåˆ—
+    int visited[MAX];   // é¡¶ç‚¹è®¿é—®æ ‡è®°
     int i, j, k;
 
     for (i = 0; i < G.vexnum; i++)
@@ -252,12 +253,12 @@ void BFS(Graph G)
         {
             visited[i] = 1;
             printf("%c ", G.vexs[i]);
-            queue[rear++] = i;  // Èë¶ÓÁĞ
+            queue[rear++] = i;  // å…¥é˜Ÿåˆ—
         }
         while (head != rear) 
         {
-            j = queue[head++];  // ³ö¶ÓÁĞ
-            for (k = first_vertex(G, j); k >= 0; k = next_vertix(G, j, k)) //kÊÇÎª·ÃÎÊµÄÁÚ½Ó¶¥µã
+            j = queue[head++];  // å‡ºé˜Ÿåˆ—
+            for (k = first_vertex(G, j); k >= 0; k = next_vertix(G, j, k)) //kæ˜¯ä¸ºè®¿é—®çš„é‚»æ¥é¡¶ç‚¹
             {
                 if (!visited[k])
                 {
@@ -272,7 +273,7 @@ void BFS(Graph G)
 }
 
 /*
- * ´òÓ¡¾ØÕó¶ÓÁĞÍ¼
+ * æ‰“å°çŸ©é˜µé˜Ÿåˆ—å›¾
  */
 void print_graph(Graph G)
 {
@@ -291,12 +292,12 @@ void main()
 {
     Graph* pG;
 
-    // ×Ô¶¨Òå"Í¼"(ÊäÈë¾ØÕó¶ÓÁĞ)
+    // è‡ªå®šä¹‰"å›¾"(è¾“å…¥çŸ©é˜µé˜Ÿåˆ—)
     //pG = create_graph();
-    // ²ÉÓÃÒÑÓĞµÄ"Í¼"
+    // é‡‡ç”¨å·²æœ‰çš„"å›¾"
     pG = create_example_graph();
 
-    print_graph(*pG);       // ´òÓ¡Í¼
-    DFSTraverse(*pG);       // Éî¶ÈÓÅÏÈ±éÀú
-    BFS(*pG);               // ¹ã¶ÈÓÅÏÈ±éÀú
+    print_graph(*pG);       // æ‰“å°å›¾
+    DFSTraverse(*pG);       // æ·±åº¦ä¼˜å…ˆéå†
+    BFS(*pG);               // å¹¿åº¦ä¼˜å…ˆéå†
 }
