@@ -3,7 +3,10 @@
 *
 *       算法思想：从数组中间开始，每次排除一半的数据，时间复杂度为O(lgN)
 */
-
+/*
+*       1.while 循环的条件是 low<=high，这里如果查找值未找到，则此时一定 low = high + 1 
+*       
+*/
 #include<stdio.h>
 int BinSearch(int Array[],int SizeOfArray,int key)  
 {  
@@ -73,6 +76,43 @@ int bsearch_first(int a[], int n, int key)
         p = -1;  
     return p;  
 } 
+/*
+            非降序数组A, 查找 第一个  值==val的元素，若找到则返回下标位置，若未找到则返回-1
+            
+            当 val < a[mid] 时， 接下来的搜索范围减半  high = mid - 1
+            当 val > a[mid] 时， 接下来的搜索范围减半  low  = mid + 1
+            当 val == a[mid] 时，这个时候就不能简单的返回了，我们要求的是第一个 == val 的值，什么条件下是第一个呢？
+            
+            当 mid == 0 那当然是第一个
+             当 mid > 1 && a[mid - 1] != val 这个时候也是第一个
+             其他情况下，这个时候查找到的值不是第一个，此时我们应该继续搜索，而不是返回，搜索范围是什么呢？ 因为是查找第一个，那么接下来肯定应该在
+             此时位置的左边继续搜索，即 high = mid - 1
+
+*/
+int search_first(int* a, int len, int val)
+  {
+     assert(a != NULL && len > 1);
+     int low = 0;
+      int high = len - 1;
+      while (low <= high) {
+          int mid = low + (high - low) / 2;
+          if (val < a[mid]) {
+              high = mid - 1;
+        } else if (val > a[mid]) {
+             low = mid + 1;
+         } else {
+             if (mid == 0) return mid;
+             if (mid > 0 && a[mid-1] != val) return mid;
+            high = mid - 1;
+         }
+     }
+     return -1;
+ }
+/*
+        非降序数组A, 查找任一 值为val的元素，保证插入该元素后 数组仍然有序，返回可以插入的任一位置
+*/
+
+
 
 /*               旋转数组元素查找问题
 *   二分查找算法有两个关键点：1）数组有序；
