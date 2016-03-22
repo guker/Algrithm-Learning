@@ -220,6 +220,99 @@ int searchFirstPos(int A[], int n, int target)
     else  
         return low;  
 }  
+/*             给定一个有序（非降序）数组A，可含有重复元素，求最大的i使得A[i]等于target，不存在则返回-1
+
+*/
+
+int searchLastPos(int A[], int n, int target)  
+{     
+    if(n <= 0) return -1;  
+    int low = 0, high = n-1;  
+    while(low < high)  
+    {  
+        /* 
+        这里中间位置的计算就不能用low+((high-low)>>1)了，因为当low+1等于high 
+        且A[low] <= target时，会死循环；所以这里要使用low+((high-low+1)>>1)， 
+        这样能够保证循环会正常结束。 
+        */  
+        int mid = low+((high-low+1)>>1);  
+        if(A[mid] > target)  
+            high = mid-1;  
+        else // A[mid] <= target  
+            low = mid;  
+    }  
+    /*  
+    循环过程中，当high小于n-1时，A[high+1]是大于target的，因为A[mid] > target时， 
+    high=mid-1；当low大于0时，A[low]是小于等于target的，因为A[mid] <= target时， 
+    low = mid；循环结束时，low 等于 high，所以，如果A[high](A[low])等于target， 
+    那么high(low)就是target出现的最大位置，否则target在数组中不存在。 
+    */  
+    if(A[high] != target)  
+        return -1;  
+    else  
+        return high;  
+} 
+
+/*
+             给定一个有序（非降序）数组A，可含有重复元素，求最大的i使得A[i]小于target，不存在则返回-1
+*/
+int searchLastPosLessThan(int A[], int n, int target)  
+{  
+    if(n <= 0) return -1;  
+    int low = 0, high = n-1;  
+    while(low < high)  
+    {  
+        int mid = low+((high-low+1)>>1); // 注意，不要导致死循环  
+        if(A[mid] < target)  
+            low = mid;  
+        else // A[mid] >= target  
+            high = mid-1;  
+    }  
+    /*  
+    循环过程中，当low大于0时，A[low]是小于target的，因为A[mid] < target时， 
+    low=mid；当high小于n-1时，A[high+1]是大于等于target的，因为A[mid] >= target时， 
+    high = mid-1；循环结束时，low 等于 high，所以，如果A[low](A[high])小于target， 
+    那么low(high)就是要找的位置，否则不存在这样的位置（A[0] >= target时）。 
+    */  
+    return A[low] < target ? low : -1;  
+}  
+
+/*
+       给定一个有序（非降序）数组A，可含有重复元素，求最小的i使得A[i]大于target，不存在则返回-1
+*/
+int searchFirstPosGreaterThan(int A[], int n, int target)  
+{  
+    if(n <= 0) return -1;  
+    int low = 0, high = n-1;  
+    while(low < high)  
+    {  
+        int mid = low+((high-low)>>1);  
+        if(A[mid] > target)  
+            high = mid;  
+        else // A[mid] <= target  
+            low = mid+1;  
+    }  
+    /*  
+    循环过程中，当low大于0时，A[low-1]是小于等于target的，因为A[mid] <= target时， 
+    low=mid+1；当high小于n-1时，A[high]是大于target的，因为A[mid] > target时， 
+    high = mid；循环结束时，low 等于 high，所以，如果A[high](A[low])大于target， 
+    那么high(low)就是要找的位置，否则不存在这样的位置（A[n-1] <= target时）。 
+    */  
+    return A[high] > target ? high : -1;  
+}  
+
+/*
+      给定一个有序（非降序）数组A，可含有重复元素，求target在数组中出现的次数
+*/
+int count(int A[], int n, int target)  
+{  
+    int firstPos = searchFirstPos(A, n, target); // 第一次出现位置  
+    if(firstPos == -1)  
+        return 0;  
+    int lastPos = searchLastPos(A, n, target);  // 最后一次出现位置  
+    return lastPos-firstPos+1;  // 出现次数  
+} 
+
 
 
 
