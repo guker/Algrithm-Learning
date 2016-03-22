@@ -108,9 +108,118 @@ int search_first(int* a, int len, int val)
      }
      return -1;
  }
+ /*
+               非降序数组A, 查找 最后一个值==val的元素，若找到则返回下标位置，若未找到则返回-1
+ */
+  int search_last(int* a, int len, int val)
+  {
+      assert(a != NULL && len > 1);
+      int low = 0;
+      int high = len - 1;
+      while (low <= high) {
+          int mid = low + (high - low) / 2;
+          if (val < a[mid]) {
+              high = mid - 1;
+         } else if (val > a[mid]) {
+             low = mid + 1;
+         } else {
+             if (mid == (len - 1)) return mid;
+             if (mid < (len - 1) && a[mid+1] != val) return mid;
+             low = mid + 1;
+         }
+     }
+     return -1;
+ }
+
+ 
+ 
+ 
+ 
 /*
         非降序数组A, 查找任一 值为val的元素，保证插入该元素后 数组仍然有序，返回可以插入的任一位置
+        当 a[mid] == val 则返回 mid，因为在该位置插入 val 数组一定保证有序
+        当 循环结束后 仍未查找到 val值，我们之前说过，此时 一定有 high = low + 1，其实查找值永远都 
+        应该在 low和high组成的区间内，现在区间内没空位了，所以可以宣告该值没有查找到，如果仍然有空位
+        ，则val一定在该区间内。也就是说此时的 low 和 high 这两个值就是 val 应该处于的位置，因为通常都
+        是在位置之前插入，所以此时直接返回 low 即可
+
 */
+int bsearch_insert(int* a, int len, int val)
+ {
+     assert(a != NULL && len > 0);
+      int low = 0;
+      int high = len - 1;
+      while (low <= high) {
+          int mid = low + (high - low) / 2;
+          if (val < a[mid]) {
+              high = mid - 1;
+          } else if (val > a[mid]) {
+            low = mid + 1;
+         } else {
+            return mid;
+         }
+    }
+    return low;
+ }
+ 
+ /*
+             非降序数组A, 查找任一 值为val的元素，保证插入该元素后 数组仍然有序，返回可以插入的第一个位置
+             因为是要求第一个可以插入的位置，当查找值不在数组中时，插入的位置是唯一的，即 return low
+ */
+ int insert_first(int* a, int len, int val)
+ {
+      assert(a != NULL && len > 1);
+     int low = 0;
+     int high = len - 1;
+     while (low <= high) {
+         int mid = low + (high - low) / 2;
+         if (val < a[mid]) {
+             high = mid - 1;
+         } else if (val > a[mid]) {
+             low = mid + 1;
+         } else {
+             if (mid == 0) return mid;
+             if (mid > 0 && a[mid-1] != val) return mid;
+             high = mid - 1;
+         }
+     }
+     return low;
+ }
+/*
+               非降序数组A, 查找 任一个  值==val的元素，若找到则 返回一组下标区间(该区间所有值 ==val)，若未找到则返回-1
+               1.当 a[mid] == val 时，并不立即 return mid，而是 以 mid 为中心 向左右两边搜索 得到所有值 == val 的区间,但此时的算法
+               复杂度为O(N)
+               2.所以可以使用上面找第一个与最后一个的下标，这样就可以组成区间
+*/
+
+
+/*
+                给定一个有序（非降序）数组A，可含有重复元素，求最小的i使得A[i]等于target，不存在则返回-1
+
+*/
+int searchFirstPos(int A[], int n, int target)  
+{  
+    if(n <= 0) return -1;  
+    int low = 0, high = n-1;  
+    while(low < high)  
+    {  
+        int mid = low+((high-low)>>1);  
+        if(A[mid] < target)  
+            low = mid+1;  
+        else // A[mid] >= target  
+            high = mid;  
+    }  
+    /*  
+    循环过程中，当low大于0时，A[low-1]是小于target的，因为A[mid] < target时， 
+    low=mid+1；当high小于n-1时，A[high]是大于等于target的，因为A[mid] >= target时， 
+    high = mid；循环结束时，low 等于 high，所以，如果A[low](A[high])等于target， 
+    那么low(high)就是target出现的最小位置，否则target在数组中不存在。 
+    */  
+    if(A[low] != target)  
+        return -1;  
+    else  
+        return low;  
+}  
 
 
 
